@@ -7,10 +7,20 @@ import os
 
 #Get the window and set the size
 window = Tk()
+window.title('Monitor')
 window.geometry('640x400')
 
-label = Label(window, text = "hello")
-label.pack()
+label_tem = Label(window, text = "Temperature: ", font=('Arial', 32))
+label_hum = Label(window, text = "Humidity: ", font=('Arial', 32))
+label_ult = Label(window, text = "Ultra: ", font=('Arial', 32))
+
+label_warn_tem = Label(window, text = "", bg = 'red', font=('Arial', 48))
+label_warn_hum = Label(window, text = "", bg = 'red', font=('Arial', 48))
+label_warn_ult = Label(window, text = "Warning: Someone is too close!!!", bg = 'red', font=('Arial', 48))
+
+label_tem.pack()
+label_hum.pack()
+label_ult.pack()
 
 field_ultra = 'field1'
 field_temperature = 'field2'
@@ -24,7 +34,40 @@ def on_message(client, userdata, msg):
     m_json = json.loads(msg.payload)
     # print("field1="+m_json["field1"])
     temperature_str = m_json[field_temperature]
-    label['text'] = temperature_str
+    ultra_str = m_json[field_ultra]
+    humidity_str = m_json[field_humidity]
+    if temperature_str != None:
+        t = int(temperature_str) / 100
+        label_tem['text'] = 'Temperature: ' + str(t) + '°C'
+        if int(temperature_str) > 2500:
+            label_warn_tem['text'] = "Warning: Temperature is too high!!!"
+            label_warn_tem['bg'] = 'red'
+            label_warn_tem.pack()
+        elif int(temperature_str) < 1400:
+            label_warn_tem['text'] = "Warning: Temperature is too low!!!"
+            label_warn_tem['bg'] = 'blue'
+            label_warn_tem.pack()
+        else:
+            label_warn_tem.pack_forget()
+    if humidity_str != None:
+        h = int(humidity_str) / 100
+        label_hum['text'] = 'Humidity: ' + str(h) +'%'
+        if int(humidity_str) > 6500:
+            label_warn_hum['text'] = "Warning: Humidity is too high!!!"
+            label_warn_hum['bg'] = 'red'
+            label_warn_hum.pack()
+        elif int(humidity_str) < 4500:
+            label_warn_hum['text'] = "Warning: Humidity is too low!!!"
+            label_warn_hum['bg'] = 'blue'
+            label_warn_hum.pack()
+        else:
+            label_warn_hum.pack_forget()
+    if ultra_str != None:
+        label_ult['text'] = 'Ultra: ' + ultra_str + 'cm'
+        if int(ultra_str) < 500:
+            label_warn_ult.pack()
+        else:
+            label_warn_ult.pack_forget()
 
 username = "DjkSFDAMJCQfAyw1MDwOHjk"
 clientId = "DjkSFDAMJCQfAyw1MDwOHjk"

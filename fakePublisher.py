@@ -11,7 +11,9 @@ topic = "channels/" + channelId + "/publish"
 # field1: ultrasonic
 # field2: temperature
 # field3: humidity
-payload = "field2=777"
+payload = "field1=400"
+#payload = "field2=3000"
+#payload = "field3=7000"
 
 mqtt_client_id = "OjAzFTQVAg8lDzgTNCwRDh0"
 mqtt_username = "OjAzFTQVAg8lDzgTNCwRDh0"
